@@ -1,4 +1,7 @@
 class YearlyQuestion < ApplicationRecord
+  has_many :quiz_attempts, dependent: :destroy
+  has_many :attempting_users, through: :quiz_attempts, source: :user
+
   validates :year, presence: true, numericality: { only_integer: true }
   validates :subject, presence: true
   validates :type, presence: true
@@ -14,6 +17,19 @@ class YearlyQuestion < ApplicationRecord
   scope :by_position, -> { order(position: :asc) }
 
   before_validation :generate_slug, on: :create
+
+  def attempts_count
+    Rails.cache.fetch([self, 'attempts_count']) do
+      quiz_attempts.count
+    end
+  end
+
+  def success_rate
+    Rails.cache.fetch([self, 'success_rate']) do
+      return 0.0 if attempts_count.zero?
+      (quiz_attempts.where(correct: true).count.to_f / attempts_count * 100).round(1)
+    end
+  end
 
   def self.find_by_subject_type_slug(subject, type, slug)
     visible.find_by(subject: subject, type: type, slug: slug)

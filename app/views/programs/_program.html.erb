@@ -1,0 +1,52 @@
+<%# Program card partial %>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <% if program.cover_image.attached? %>
+    <%= image_tag program.cover_image, class: "w-full h-48 object-cover" %>
+  <% else %>
+    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+      <span class="text-gray-400">No image available</span>
+    </div>
+  <% end %>
+
+  <div class="p-4">
+    <div class="flex items-center space-x-2 mb-2">
+      <% if program.topic %>
+        <span class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded">
+          <%= program.topic.name %>
+        </span>
+      <% end %>
+      <% if program.subject %>
+        <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded">
+          <%= program.subject.name %>
+        </span>
+      <% end %>
+    </div>
+
+    <h3 class="text-lg font-semibold mb-2">
+      <%= link_to program.title, program_path(program), class: "hover:text-blue-600" %>
+    </h3>
+
+    <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+      <%= program.description %>
+    </p>
+
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="text-sm text-gray-500">
+          <%= pluralize(program.enrollments_count, 'student') %>
+        </span>
+        <% if program.average_rating %>
+          <div class="flex items-center">
+            <span class="text-yellow-400">★</span>
+            <span class="text-sm text-gray-600 ml-1">
+              <%= number_with_precision(program.average_rating, precision: 1) %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+      <%= link_to "View Program", program_path(program), 
+          class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700" %>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,42 @@
+<%# Yearly question card partial %>
+<div class="bg-white rounded-lg shadow p-4">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <div class="flex items-center space-x-2 mb-2">
+        <% if question.subject %>
+          <span class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded">
+            <%= question.subject.name %>
+          </span>
+        <% end %>
+        <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded">
+          <%= question.year %>
+        </span>
+        <span class="px-2 py-1 text-xs font-semibold bg-purple-100 text-purple-800 rounded">
+          <%= question.question_type.titleize %>
+        </span>
+      </div>
+
+      <h3 class="text-lg font-semibold mb-2">
+        <%= link_to question.title, yearly_question_path(question), class: "hover:text-blue-600" %>
+      </h3>
+
+      <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+        <%= question.content %>
+      </p>
+
+      <div class="flex items-center space-x-4 text-sm text-gray-500">
+        <span>
+          <%= pluralize(question.attempts_count, 'attempt') %>
+        </span>
+        <span>
+          <%= number_to_percentage(question.success_rate, precision: 1) %> success rate
+        </span>
+      </div>
+    </div>
+
+    <div class="ml-4">
+      <%= link_to "View Question", yearly_question_path(question), 
+          class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700" %>
+    </div>
+  </div>
+</div> 

@@ -2,6 +2,8 @@ class QaQuestion < ApplicationRecord
   belongs_to :user
   has_many :qa_answers, dependent: :destroy
   has_many :qa_votes, as: :votable, dependent: :destroy
+  has_many :taggings, as: :taggable, dependent: :destroy
+  has_many :tags, through: :taggings
 
   validates :question, presence: true
   validates :user_id, presence: true
@@ -19,23 +21,29 @@ class QaQuestion < ApplicationRecord
       .visible
   }
   scope :with_tag, ->(tag) {
-    where("tags LIKE ?", "%#{tag}%")
+    joins(:tags).where(tags: { name: tag })
   }
 
   def upvotes_count
-    qa_votes.where(vote: 1).count
+    Rails.cache.fetch([self, 'upvotes_count']) do
+      qa_votes.where(vote: 1).count
+    end
   end
 
   def downvotes_count
-    qa_votes.where(vote: -1).count
+    Rails.cache.fetch([self, 'downvotes_count']) do
+      qa_votes.where(vote: -1).count
+    end
   end
 
   def vote_count
     upvotes_count - downvotes_count
   end
 
-  def answer_count
-    qa_answers.visible.count
+  def answers_count
+    Rails.cache.fetch([self, 'answers_count']) do
+      qa_answers.visible.count
+    end
   end
 
   def related_questions(limit: 5)

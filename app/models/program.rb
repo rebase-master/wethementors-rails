@@ -1,5 +1,6 @@
 class Program < ApplicationRecord
-  belongs_to :topic
+  belongs_to :topic, counter_cache: true
+  belongs_to :subject, counter_cache: true
   has_many :program_comments, dependent: :destroy
   has_many :program_enrollments, dependent: :destroy
   has_many :enrolled_users, through: :program_enrollments, source: :user
@@ -28,6 +29,8 @@ class Program < ApplicationRecord
   scope :popular, -> { joins(:program_enrollments).group('programs.id').order('COUNT(program_enrollments.id) DESC') }
 
   before_validation :generate_slug, on: :create
+  after_save :update_topic_programs_count
+  after_destroy :update_topic_programs_count
 
   def self.find_by_slug(slug)
     visible.find_by(slug: slug)
@@ -84,7 +87,15 @@ class Program < ApplicationRecord
   end
 
   def average_rating
-    program_ratings.average(:rating)&.round(1)
+    Rails.cache.fetch([self, 'average_rating']) do
+      program_ratings.average(:rating)&.round(1)
+    end
+  end
+
+  def enrollments_count
+    Rails.cache.fetch([self, 'enrollments_count']) do
+      program_enrollments.count
+    end
   end
 
   def rating_distribution
@@ -134,6 +145,11 @@ class Program < ApplicationRecord
   end
 
   private
+
+  def update_topic_programs_count
+    topic.reset_programs_count if topic
+    subject.reset_programs_count if subject
+  end
 
   def generate_slug
     return if slug.present?

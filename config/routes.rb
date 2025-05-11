@@ -5,6 +5,64 @@ Rails.application.routes.draw do
                registrations: 'users/registrations'
              }
 
+  # Main routes
+  resources :programs do
+    member do
+      post 'enroll'
+      post 'unenroll'
+      get 'progress'
+      get 'related'
+    end
+    resources :program_comments, only: [:create, :update, :destroy] do
+      member do
+        post 'flag'
+        delete 'unflag'
+      end
+    end
+  end
+
+  resources :qa, controller: 'qa', as: 'qa' do
+    member do
+      post 'vote'
+    end
+    resources :answers, controller: 'qa_answers', only: [:create, :edit, :update, :destroy] do
+      member do
+        post 'vote'
+      end
+    end
+  end
+
+  resources :quiz, controller: 'quiz' do
+    member do
+      get 'high_scores'
+      get 'progress'
+      get 'statistics'
+    end
+    resources :questions, controller: 'quiz_questions', only: [:show, :new, :create, :edit, :update, :destroy] do
+      collection do
+        post 'submit'
+      end
+    end
+  end
+
+  resources :yearly_questions do
+    collection do
+      get ':subject/:type/:slug', to: 'yearly_questions#show', as: :show_by_slug
+    end
+  end
+
+  resources :subjects do
+    collection do
+      get ':url_name', to: 'subjects#show', as: :show_by_url_name
+    end
+  end
+
+  resources :topics do
+    collection do
+      get ':url_name', to: 'topics#show', as: :show_by_url_name
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       post 'auth/login', to: 'authentication#create'
@@ -18,32 +76,6 @@ Rails.application.routes.draw do
       end
       resources :profile_options, only: [:index, :show, :create, :update, :destroy]
       
-      resources :qa_questions do
-        member do
-          post 'vote'
-        end
-        resources :qa_answers, only: [:index, :create] do
-          member do
-            post 'vote'
-          end
-        end
-      end
-      resources :qa_answers, only: [:update, :destroy]
-      
-      # Quiz System
-      resources :quiz_categories do
-        member do
-          get 'high_scores'
-          get 'progress'
-          get 'statistics'
-        end
-        resources :quiz_questions, only: [:index] do
-          collection do
-            post 'submit'
-          end
-        end
-      end
-      
       # Program Management
       resources :programs, only: [:index, :create, :update, :destroy] do
         member do
@@ -51,9 +83,6 @@ Rails.application.routes.draw do
           post 'unenroll'
           get 'progress'
           get 'related'
-        end
-        collection do
-          get ':slug', to: 'programs#show_by_slug', as: :show_by_slug
         end
         
         resources :program_sections, shallow: true do
@@ -85,36 +114,9 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :program_comments, only: [:update, :destroy] do
-        member do
-          post 'flag'
-          delete 'unflag'
-        end
-      end
-      
+
       resources :users, only: [:show, :update] do
         resources :profiles, only: [:show, :update]
-      end
-
-      # Yearly Questions
-      resources :yearly_questions, only: [:index, :create, :update, :destroy] do
-        collection do
-          get ':subject/:type/:slug', to: 'yearly_questions#show', as: :show_by_slug
-        end
-      end
-
-      # Subjects
-      resources :subjects, only: [:index, :create, :update, :destroy] do
-        collection do
-          get ':url_name', to: 'subjects#show', as: :show_by_url_name
-        end
-      end
-
-      # Topics
-      resources :topics, only: [:index, :create, :update, :destroy] do
-        collection do
-          get ':url_name', to: 'topics#show', as: :show_by_url_name
-        end
       end
 
       # Tags

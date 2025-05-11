@@ -1,0 +1,33 @@
+<%# Example data structure: %>
+<%# questions = {
+  array: [{heading: 'Array Q1', slug: 'array-q1'}, ...],
+  strings: [...], sorting: [...], search: [...], series: [...]
+} %>
+
+<% sidebar_sections = [
+  { key: :array,    title: 'Java Array Questions',    color: 'text-blue-600',    see_all: category_path('arrays-1d') },
+  { key: :strings,  title: 'Java String Questions',   color: 'text-red-600',     see_all: category_path('strings-basic') },
+  { key: :sorting,  title: 'Sorting in Java',         color: 'text-indigo-600',  see_all: category_path('sorting') },
+  { key: :search,   title: 'Searching in Java',       color: 'text-green-600',   see_all: nil },
+  { key: :series,   title: 'Java Series Questions',   color: 'text-yellow-600',  see_all: category_path('series') }
+] %>
+
+<% sidebar_sections.each do |section| %>
+  <% items = questions[section[:key]] || [] %>
+  <% next if items.empty? %>
+  <div class="bg-white rounded-lg shadow mb-6 p-4">
+    <h3 class="text-lg font-semibold mb-2 <%= section[:color] %>"><%= section[:title] %></h3>
+    <ul class="space-y-1 mb-3">
+      <% items.each do |q| %>
+        <li>
+          <%= link_to q[:heading], program_path(q[:slug]), class: 'text-blue-700 hover:underline' %>
+        </li>
+      <% end %>
+    </ul>
+    <% if section[:see_all] %>
+      <div class="text-center">
+        <%= link_to 'SEE ALL', section[:see_all], class: 'btn btn-secondary btn-sm' %>
+      </div>
+    <% end %>
+  </div>
+<% end %> 

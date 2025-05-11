@@ -1,5 +1,8 @@
 class CreateQuizQuestions < ActiveRecord::Migration[7.1]
-  def change
+  def up
+    # Drop the table if it exists
+    drop_table :quiz_questions if table_exists?(:quiz_questions)
+
     create_table :quiz_questions do |t|
       t.references :quiz_category, null: false, foreign_key: true
       t.text :question, null: false
@@ -13,5 +16,9 @@ class CreateQuizQuestions < ActiveRecord::Migration[7.1]
 
     add_index :quiz_questions, :active
     add_index :quiz_questions, :difficulty
+  end
+
+  def down
+    drop_table :quiz_questions
   end
 end 

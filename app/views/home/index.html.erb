@@ -1,0 +1,51 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Hero Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold mb-4">Welcome to WeTheMentors</h1>
+    <p class="text-xl text-gray-600">Your platform for learning and growth</p>
+  </div>
+
+  <!-- Featured Programs -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-6">Featured Programs</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <%= render partial: "programs/program", collection: @featured_programs %>
+    </div>
+    <div class="text-center mt-6">
+      <%= link_to "View All Programs", programs_path, class: "btn btn-primary" %>
+    </div>
+  </section>
+
+  <!-- Recent Questions -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-6">Recent Questions</h2>
+    <div class="space-y-4">
+      <%= render partial: "qa/question", collection: @recent_questions %>
+    </div>
+    <div class="text-center mt-6">
+      <%= link_to "View All Questions", qa_index_path, class: "btn btn-primary" %>
+    </div>
+  </section>
+
+  <!-- Popular Topics -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-6">Popular Topics</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <%= render partial: "topics/topic", collection: @popular_topics %>
+    </div>
+    <div class="text-center mt-6">
+      <%= link_to "View All Topics", topics_path, class: "btn btn-primary" %>
+    </div>
+  </section>
+
+  <!-- Yearly Questions -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-6">Latest Yearly Questions</h2>
+    <div class="space-y-4">
+      <%= render partial: "yearly_questions/question", collection: @yearly_questions %>
+    </div>
+    <div class="text-center mt-6">
+      <%= link_to "View All Yearly Questions", yearly_questions_path, class: "btn btn-primary" %>
+    </div>
+  </section>
+</div> 

@@ -1,5 +1,6 @@
 class Topic < ApplicationRecord
   has_many :programs, dependent: :restrict_with_error
+  has_many :qa_questions, through: :programs
 
   validates :name, presence: true, uniqueness: true
   validates :url_name, presence: true, uniqueness: true,
@@ -7,6 +8,15 @@ class Topic < ApplicationRecord
 
   scope :visible, -> { where(visible: true) }
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_programs_count, -> {
+    if column_names.include?('programs_count')
+      order(programs_count: :desc)
+    else
+      left_joins(:programs)
+        .group('topics.id')
+        .order('COUNT(programs.id) DESC')
+    end
+  }
 
   before_validation :generate_url_name, on: :create
 
@@ -20,6 +30,17 @@ class Topic < ApplicationRecord
 
   def to_param
     url_name
+  end
+
+  def questions_count
+    Rails.cache.fetch([self, 'questions_count']) do
+      qa_questions.visible.count
+    end
+  end
+
+  # Reset the programs_count counter
+  def reset_programs_count
+    update_column(:programs_count, programs.count)
   end
 
   private

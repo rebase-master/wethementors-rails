@@ -1,0 +1,31 @@
+<%# Topic card partial %>
+<div class="bg-white rounded-lg shadow p-4 text-center">
+  <% if topic.icon.attached? %>
+    <div class="w-16 h-16 mx-auto mb-3">
+      <%= image_tag topic.icon, class: "w-full h-full object-contain" %>
+    </div>
+  <% else %>
+    <div class="w-16 h-16 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+      <span class="text-2xl text-gray-400">
+        <%= topic.name.first.upcase %>
+      </span>
+    </div>
+  <% end %>
+
+  <h3 class="text-lg font-semibold mb-2">
+    <%= link_to topic.name, topic_path(topic), class: "hover:text-blue-600" %>
+  </h3>
+
+  <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+    <%= topic.description %>
+  </p>
+
+  <div class="flex items-center justify-center space-x-4 text-sm text-gray-500">
+    <span>
+      <%= pluralize(topic.programs_count, 'program') %>
+    </span>
+    <span>
+      <%= pluralize(topic.questions_count, 'question') %>
+    </span>
+  </div>
+</div> 

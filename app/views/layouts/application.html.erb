@@ -13,14 +13,68 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "application.tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50">
-    <main class="container mx-auto px-4 py-8">
-      <%= yield %>
-    </main>
+  <body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow">
+      <div class="container mx-auto flex items-center justify-between py-4 px-4">
+        <div class="flex items-center space-x-2">
+          <%= link_to image_tag('wtm-text-heading-tpnt.png', alt: 'Mentors - We Change The Way You Think', class: 'h-8'), root_path %>
+        </div>
+        <nav class="flex-1 flex justify-center">
+          <ul class="flex space-x-6 text-gray-700 font-medium">
+            <li><%= link_to 'Home', root_path, class: 'hover:text-blue-600' %></li>
+            <li><%= link_to 'Notes', notes_path, class: 'hover:text-blue-600' %></li>
+            <li><%= link_to 'QA', qa_questions_path, class: 'hover:text-blue-600' %></li>
+            <li class="relative group">
+              <span class="cursor-pointer hover:text-blue-600">Class 10</span>
+              <ul class="absolute left-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <li><%= link_to 'Sample Papers', class10_sample_papers_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Previous Years', class10_previous_years_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+              </ul>
+            </li>
+            <li class="relative group">
+              <span class="cursor-pointer hover:text-blue-600">Class 12</span>
+              <ul class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <li><%= link_to 'Sample Papers', class12_sample_papers_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Previous Years', class12_previous_years_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'ISC Computer Practical', isc_computer_practical_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'ISC Computer Guess', isc_computer_guess_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Viva', isc_viva_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Computer Project', isc_computer_project_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+              </ul>
+            </li>
+            <li class="relative group">
+              <span class="cursor-pointer hover:text-blue-600">Misc</span>
+              <ul class="absolute left-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <li><%= link_to 'Trivia', trivia_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Quotes', quotes_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+                <li><%= link_to 'Riddles', riddles_path, class: 'block px-4 py-2 hover:bg-gray-100' %></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <div class="flex items-center space-x-4">
+          <% if user_signed_in? %>
+            <%= link_to current_user.username, profile_path(current_user), class: 'flex items-center space-x-2 font-semibold text-gray-700 hover:text-blue-600' %>
+            <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-gray-500 hover:text-red-600' %>
+          <% else %>
+            <%= link_to 'Register', new_user_registration_path, class: 'text-gray-700 hover:text-blue-600' %>
+            <span>|</span>
+            <%= link_to 'Login', new_user_session_path, class: 'text-gray-700 hover:text-blue-600' %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+    <div class="container mx-auto flex flex-col md:flex-row px-4 py-8">
+      <aside class="w-full md:w-1/3 md:pr-8 mb-8 md:mb-0">
+        <%= yield :sidebar %>
+      </aside>
+      <main class="flex-1">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>
