@@ -20,7 +20,7 @@ gem "tailwindcss-rails", "~> 2.3"
 gem "jbuilder"
 # Authentication
 gem "devise", "~> 4.9"
-gem "devise-jwt", "~> 0.11.0"
+gem "devise-jwt", "~> 0.12.1"
 # JSON API Serialization
 gem "jsonapi-serializer", "~> 2.2"
 
