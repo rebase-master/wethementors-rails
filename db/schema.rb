@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_042574) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
     t.datetime "updated_at", null: false
     t.index ["resource"], name: "index_downloads_on_resource"
     t.index ["user_id"], name: "index_downloads_on_user_id"
+  end
+
+  create_table "email_users", force: :cascade do |t|
+    t.string "email", null: false
+    t.integer "sent_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_email_users_on_email", unique: true
   end
 
   create_table "notes", force: :cascade do |t|
@@ -65,6 +73,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notes_category_id"], name: "index_notes_sub_categories_on_notes_category_id"
+  end
+
+  create_table "profile_options", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_profile_options_on_name", unique: true
   end
 
   create_table "program_comments", force: :cascade do |t|
@@ -201,6 +216,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
     t.index ["url_name"], name: "index_subjects_on_url_name", unique: true
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
   create_table "topics", force: :cascade do |t|
     t.string "topic", null: false
     t.string "url_name", null: false
@@ -214,6 +236,26 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
     t.text "fact", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_data", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "profile_option_id", null: false
+    t.text "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_option_id"], name: "index_user_data_on_profile_option_id"
+    t.index ["user_id", "profile_option_id"], name: "index_user_data_on_user_id_and_profile_option_id", unique: true
+    t.index ["user_id"], name: "index_user_data_on_user_id"
+  end
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "username", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_profiles_on_user_id"
+    t.index ["username"], name: "index_user_profiles_on_username", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -296,6 +338,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
   add_foreign_key "quiz_questions", "quiz_categories"
   add_foreign_key "quiz_scores", "quiz_categories"
   add_foreign_key "quiz_scores", "users"
+  add_foreign_key "user_data", "profile_options"
+  add_foreign_key "user_data", "users"
+  add_foreign_key "user_profiles", "users"
   add_foreign_key "votes", "users"
   add_foreign_key "yearly_question_comments", "users"
   add_foreign_key "yearly_question_comments", "yearly_questions"
