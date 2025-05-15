@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  topic: one
+  heading: MyString
+  slug: MyString
+  question: MyText
+  solution: MyText
+  visible: false
+
+two:
+  topic: two
+  heading: MyString
+  slug: MyString
+  question: MyText
+  solution: MyText
+  visible: false

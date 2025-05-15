@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_14_065520) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_021930) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,6 +58,115 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_065520) do
     t.index ["notes_category_id"], name: "index_notes_sub_categories_on_notes_category_id"
   end
 
+  create_table "program_comments", force: :cascade do |t|
+    t.bigint "program_id", null: false
+    t.bigint "user_id", null: false
+    t.text "comment", null: false
+    t.boolean "deleted", default: false
+    t.boolean "flagged", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_program_comments_on_program_id"
+    t.index ["user_id"], name: "index_program_comments_on_user_id"
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.bigint "topic_id", null: false
+    t.string "heading"
+    t.string "slug", null: false
+    t.text "question", null: false
+    t.text "solution", null: false
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_programs_on_slug", unique: true
+    t.index ["topic_id"], name: "index_programs_on_topic_id"
+  end
+
+  create_table "qa_answer_votes", force: :cascade do |t|
+    t.bigint "qa_answer_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "vote", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["qa_answer_id"], name: "index_qa_answer_votes_on_qa_answer_id"
+    t.index ["user_id"], name: "index_qa_answer_votes_on_user_id"
+  end
+
+  create_table "qa_answers", force: :cascade do |t|
+    t.bigint "qa_question_id", null: false
+    t.bigint "user_id", null: false
+    t.text "answer", null: false
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["qa_question_id"], name: "index_qa_answers_on_qa_question_id"
+    t.index ["user_id"], name: "index_qa_answers_on_user_id"
+  end
+
+  create_table "qa_question_votes", force: :cascade do |t|
+    t.bigint "qa_question_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "vote", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["qa_question_id"], name: "index_qa_question_votes_on_qa_question_id"
+    t.index ["user_id"], name: "index_qa_question_votes_on_user_id"
+  end
+
+  create_table "qa_questions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "question", null: false
+    t.text "description"
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_qa_questions_on_user_id"
+  end
+
+  create_table "quiz_categories", force: :cascade do |t|
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "quiz_options", force: :cascade do |t|
+    t.bigint "quiz_question_id", null: false
+    t.string "option_text", null: false
+    t.boolean "correct", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_question_id"], name: "index_quiz_options_on_quiz_question_id"
+  end
+
+  create_table "quiz_questions", force: :cascade do |t|
+    t.bigint "quiz_category_id", null: false
+    t.string "question", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_category_id"], name: "index_quiz_questions_on_quiz_category_id"
+  end
+
+  create_table "quiz_scores", force: :cascade do |t|
+    t.bigint "quiz_category_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "score"
+    t.integer "attempts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_category_id"], name: "index_quiz_scores_on_quiz_category_id"
+    t.index ["user_id"], name: "index_quiz_scores_on_user_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.string "topic", null: false
+    t.string "url_name", null: false
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["url_name"], name: "index_topics_on_url_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -69,8 +178,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_065520) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.string "votable_type", null: false
+    t.bigint "votable_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "vote", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_votes_on_user_id"
+    t.index ["votable_type", "votable_id"], name: "index_votes_on_votable"
+  end
+
   add_foreign_key "notes", "notes_categories"
   add_foreign_key "notes", "notes_sub_categories"
   add_foreign_key "notes_contents", "notes"
   add_foreign_key "notes_sub_categories", "notes_categories"
+  add_foreign_key "program_comments", "programs"
+  add_foreign_key "program_comments", "users"
+  add_foreign_key "programs", "topics"
+  add_foreign_key "qa_answer_votes", "qa_answers"
+  add_foreign_key "qa_answer_votes", "users"
+  add_foreign_key "qa_answers", "qa_questions"
+  add_foreign_key "qa_answers", "users"
+  add_foreign_key "qa_question_votes", "qa_questions"
+  add_foreign_key "qa_question_votes", "users"
+  add_foreign_key "qa_questions", "users"
+  add_foreign_key "quiz_options", "quiz_questions"
+  add_foreign_key "quiz_questions", "quiz_categories"
+  add_foreign_key "quiz_scores", "quiz_categories"
+  add_foreign_key "quiz_scores", "users"
+  add_foreign_key "votes", "users"
 end

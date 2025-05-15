@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quiz_category: one
+  question: MyString
+  answer: MyString
+
+two:
+  quiz_category: two
+  question: MyString
+  answer: MyString

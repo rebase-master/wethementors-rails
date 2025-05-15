@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  program: one
+  user: one
+  comment: MyText
+  deleted: false
+  flagged: false
+
+two:
+  program: two
+  user: two
+  comment: MyText
+  deleted: false
+  flagged: false
