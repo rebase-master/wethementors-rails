@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notes_category: one
+  notes_sub_category: one
+  slug: MyString
+  deleted: false
+  created_at: 2025-05-14 12:25:16
+
+two:
+  notes_category: two
+  notes_sub_category: two
+  slug: MyString
+  deleted: false
+  created_at: 2025-05-14 12:25:16

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notes_category: one
+  sub_category: MyString
+  visible: false
+  created_at: 2025-05-14 12:25:11
+
+two:
+  notes_category: two
+  sub_category: MyString
+  visible: false
+  created_at: 2025-05-14 12:25:11
