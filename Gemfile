@@ -19,7 +19,7 @@ gem "cssbundling-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -57,3 +57,31 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# User Management
+gem 'devise'
+gem 'pundit'
+
+# Background Jobs
+gem 'sidekiq'
+
+# Testing
+gem 'rspec-rails'
+gem 'factory_bot_rails'
+
+# API Development
+gem 'grape'
+
+# Frontend
+gem 'hotwire-rails'
+gem 'tailwindcss-rails'
+
+# Security
+gem 'brakeman'
+gem 'secure_headers'
+
+# Logging
+gem 'lograge'
+
+# Database
+gem 'pg_search'
