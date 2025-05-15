@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_15_021930) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -158,6 +158,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_021930) do
     t.index ["user_id"], name: "index_quiz_scores_on_user_id"
   end
 
+  create_table "subjects", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "url_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["url_name"], name: "index_subjects_on_url_name", unique: true
+  end
+
   create_table "topics", force: :cascade do |t|
     t.string "topic", null: false
     t.string "url_name", null: false
@@ -189,6 +197,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_021930) do
     t.index ["votable_type", "votable_id"], name: "index_votes_on_votable"
   end
 
+  create_table "yearly_question_comments", force: :cascade do |t|
+    t.bigint "yearly_question_id", null: false
+    t.bigint "user_id", null: false
+    t.text "comment", null: false
+    t.boolean "deleted", default: false
+    t.boolean "flagged", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_yearly_question_comments_on_user_id"
+    t.index ["yearly_question_id"], name: "index_yearly_question_comments_on_yearly_question_id"
+  end
+
+  create_table "yearly_questions", force: :cascade do |t|
+    t.bigint "subject_id", null: false
+    t.integer "year", null: false
+    t.string "type", null: false
+    t.integer "position", null: false
+    t.string "slug", null: false
+    t.string "heading"
+    t.text "question", null: false
+    t.text "solution", null: false
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_yearly_questions_on_slug", unique: true
+    t.index ["subject_id"], name: "index_yearly_questions_on_subject_id"
+  end
+
   add_foreign_key "notes", "notes_categories"
   add_foreign_key "notes", "notes_sub_categories"
   add_foreign_key "notes_contents", "notes"
@@ -208,4 +244,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_021930) do
   add_foreign_key "quiz_scores", "quiz_categories"
   add_foreign_key "quiz_scores", "users"
   add_foreign_key "votes", "users"
+  add_foreign_key "yearly_question_comments", "users"
+  add_foreign_key "yearly_question_comments", "yearly_questions"
+  add_foreign_key "yearly_questions", "subjects"
 end

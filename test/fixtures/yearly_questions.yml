@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  subject: one
+  year: 1
+  type: 
+  position: 1
+  slug: MyString
+  heading: MyString
+  question: MyText
+  solution: MyText
+  visible: false
+
+two:
+  subject: two
+  year: 1
+  type: 
+  position: 1
+  slug: MyString
+  heading: MyString
+  question: MyText
+  solution: MyText
+  visible: false
