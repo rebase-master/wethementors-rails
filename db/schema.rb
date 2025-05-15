@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_042569) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "downloads", force: :cascade do |t|
+    t.string "resource", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource"], name: "index_downloads_on_resource"
+    t.index ["user_id"], name: "index_downloads_on_user_id"
+  end
 
   create_table "notes", force: :cascade do |t|
     t.bigint "notes_category_id", null: false
@@ -128,6 +137,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.string "slug"
+    t.index ["slug"], name: "index_quiz_categories_on_slug", unique: true
   end
 
   create_table "quiz_options", force: :cascade do |t|
@@ -144,7 +156,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.string "question", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "difficulty"
+    t.string "slug"
     t.index ["quiz_category_id"], name: "index_quiz_questions_on_quiz_category_id"
+    t.index ["slug"], name: "index_quiz_questions_on_slug", unique: true
   end
 
   create_table "quiz_scores", force: :cascade do |t|
@@ -156,6 +171,26 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.datetime "updated_at", null: false
     t.index ["quiz_category_id"], name: "index_quiz_scores_on_quiz_category_id"
     t.index ["user_id"], name: "index_quiz_scores_on_user_id"
+  end
+
+  create_table "quotes", force: :cascade do |t|
+    t.text "quote", null: false
+    t.string "slug", null: false
+    t.string "author"
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_quotes_on_slug", unique: true
+    t.index ["visible"], name: "index_quotes_on_visible"
+  end
+
+  create_table "riddles", force: :cascade do |t|
+    t.text "riddle", null: false
+    t.text "answer", null: false
+    t.boolean "visible", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["visible"], name: "index_riddles_on_visible"
   end
 
   create_table "subjects", force: :cascade do |t|
@@ -175,6 +210,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.index ["url_name"], name: "index_topics_on_url_name", unique: true
   end
 
+  create_table "trivia", force: :cascade do |t|
+    t.text "fact", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -184,6 +225,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.datetime "last_login"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "videos", force: :cascade do |t|
+    t.string "heading", null: false
+    t.string "link", null: false
+    t.text "description"
+    t.string "source"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["heading"], name: "index_videos_on_heading"
+    t.index ["source"], name: "index_videos_on_source"
   end
 
   create_table "votes", force: :cascade do |t|
@@ -225,6 +277,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_15_042532) do
     t.index ["subject_id"], name: "index_yearly_questions_on_subject_id"
   end
 
+  add_foreign_key "downloads", "users"
   add_foreign_key "notes", "notes_categories"
   add_foreign_key "notes", "notes_sub_categories"
   add_foreign_key "notes_contents", "notes"
