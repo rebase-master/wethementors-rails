@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
   # Rescue from unauthorized access
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+  def authenticate_admin_user!
+    authenticate_user!
+    unless current_user.admin? || current_user.superadmin?
+      flash[:alert] = "You are not authorized to access this resource!"
+      redirect_to root_path
+    end
+  end
+
   private
 
   def user_not_authorized
