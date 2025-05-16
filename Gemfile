@@ -85,3 +85,8 @@ gem 'lograge'
 
 # Database
 gem 'pg_search'
+
+# Admin interface
+gem 'activeadmin'
+gem 'sassc-rails'
+gem 'sprockets-rails'

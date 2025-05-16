@@ -1,4 +1,4 @@
-class QAQuestion < ApplicationRecord
+class QaQuestion < ApplicationRecord
   belongs_to :user
   has_many :qa_answers, dependent: :destroy
   has_many :votes, as: :votable, dependent: :destroy
