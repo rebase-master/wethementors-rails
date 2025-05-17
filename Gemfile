@@ -85,8 +85,12 @@ gem 'lograge'
 
 # Database
 gem 'pg_search'
+gem 'kaminari'
 
 # Admin interface
 gem 'activeadmin'
 gem 'sassc-rails'
 gem 'sprockets-rails'
+
+# Authentication
+gem 'jwt'

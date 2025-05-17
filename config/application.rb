@@ -27,5 +27,7 @@ module WethementorsRails
     config.active_job.queue_adapter = :sidekiq
 
     config.autoload_paths << Rails.root.join('app/api')
+    config.eager_load_paths << Rails.root.join('app/api')
+
   end
 end
